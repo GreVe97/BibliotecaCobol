@@ -75,10 +75,39 @@
              STOP RUN.      
 
        ADMIN-MENU.
+           DISPLAY "------ ADMIN MENU ------"
+           DISPLAY "1. Inserisci nuovo utente" 
+           DISPLAY "2. Cancella utente" 
+           DISPLAY "3. Visualizza Utenti" 
+           DISPLAY "4. Inserisci Libro" 
+           DISPLAY "5. Cancellare Libro"
+           DISPLAY "6. Visualizza libri" 
+           DISPLAY "7. Inserire nuove case editrici" 
+           DISPLAY "8. Cancellare case editrici" 
+           DISPLAY "9. Vedere tutte le case editrici" 
+           DISPLAY "10. Vedere tutte le prenotazioni" 
+           DISPLAY "Scegli un'opzione: " 
+           ACCEPT SCELTA-MENU.
+           EVALUATE SCELTA-MENU
+               WHEN 1 CALL 'INSERT-USER' 
+               WHEN 2 CALL 'DELETE-USER' 
+               WHEN 3 CALL 'DISPLAY-USERS' 
+               WHEN 4 CALL 'INSERT-BOOK' 
+               WHEN 5 CALL 'DELETE-BOOK' 
+               WHEN 6 CALL 'DISPLAY-BOOKS' 
+               WHEN 7 CALL 'INSERT-PUBLISHER' 
+               WHEN 8 CALL 'DELETE-PUBLISHER' 
+               WHEN 9 CALL 'DISPLAY-PUBLISHERS' 
+               WHEN 10 CALL 'DISPLAY-RESERVATIONS' 
+               WHEN OTHER 
+                   DISPLAY "Invalid option." 
+                   PERFORM ADMIN-MENU
+           END-EVALUATE.
 
 
 
        SUPEADMIN-MENU.
+           DISPLAY "------SUPER ADMIN MENU ------"
            DISPLAY "1. Inserisci nuovo utente"
            DISPLAY "2. Cancella utente"
            DISPLAY "3. Visualizza Utenti"
@@ -113,6 +142,22 @@
 
 
        OPERATORE-MENU.
+           DISPLAY "------OPERATORE MENU ------"
+            DISPLAY "1. Visualizza libri" 
+            DISPLAY "2. Visualizza case editrici" 
+            DISPLAY "3. Visualizza libri per chiave di ricerca" 
+            DISPLAY "4. Prenotare un libro" 
+            DISPLAY "Scegli un'opzione: " 
+            ACCEPT SCELTA-MENU.
+            EVALUATE SCELTA-MENU 
+               WHEN 1 CALL 'DISPLAY-BOOKS' 
+               WHEN 2 CALL 'DISPLAY-PUBLISHERS' 
+               WHEN 3 CALL 'SEARCH-BOOKS' 
+               WHEN 4 CALL 'RESERVE-BOOK' 
+                WHEN OTHER 
+                   DISPLAY "Invalid option." 
+                   PERFORM OPERATORE-MENU 
+            END-EVALUATE.
 
 
 
