@@ -1,0 +1,77 @@
+-- Rimozione delle tabelle esistenti, se presenti
+DROP TABLE IF EXISTS Prenotazione;
+DROP TABLE IF EXISTS Libro;
+DROP TABLE IF EXISTS CasaEditrice;
+DROP TABLE IF EXISTS Utente;
+DROP TABLE IF EXISTS Ruolo;
+
+-- Creazione delle tabelle
+
+-- Tabella Ruolo
+CREATE TABLE Ruolo (
+    Ruolo VARCHAR(20) check (Ruolo in ('Amministratore', 'Operatore', 'Super Amministratore')) PRIMARY KEY,
+    Descrizione VARCHAR(255) NOT NULL
+);
+
+-- Tabella Utente
+CREATE TABLE Utente (
+    Username VARCHAR(50) PRIMARY KEY,
+    Passw VARCHAR(50) NOT NULL,
+    Nome VARCHAR(255) NOT NULL,
+    Cognome VARCHAR(255) NOT NULL,
+    Indirizzo VARCHAR(255),
+    Ruolo VARCHAR(20),
+    FOREIGN KEY (Ruolo) REFERENCES Ruolo(Ruolo)
+);
+
+-- Tabella Casa Editrice
+CREATE TABLE CasaEditrice (
+    Codice SERIAL PRIMARY KEY,
+    Nome VARCHAR(255) UNIQUE NOT NULL,
+    Indirizzo VARCHAR(255) NOT NULL
+);
+
+-- Tabella Libro
+CREATE TABLE Libro (
+    ISBN VARCHAR(13) PRIMARY KEY,
+    Titolo VARCHAR(255) NOT NULL,
+    Autore VARCHAR(255),
+    CodiceCasaEditrice INT,
+    FOREIGN KEY (CodiceCasaEditrice) REFERENCES CasaEditrice(Codice)
+);
+
+-- Tabella Prenotazione
+CREATE TABLE Prenotazione (
+    codiceISBN VARCHAR(13),
+    Username VARCHAR(50),
+    data_prenotazione DATE,
+    PRIMARY KEY (codiceISBN, Username),
+    FOREIGN KEY (codiceISBN) REFERENCES Libro(ISBN),
+    FOREIGN KEY (Username) REFERENCES Utente(Username)
+);
+
+INSERT INTO Ruolo (Ruolo, Descrizione) VALUES 
+('Amministratore', 'Sei un admin'),
+('Super Amministratore', 'Sei un amministratore'),
+('Operatore', 'Sei un operatore');
+
+
+INSERT INTO Utente (Username, Passw, Nome, Cognome, Indirizzo, Ruolo) VALUES 
+('pippo', 'password123', 'Super', 'Admin', 'Via Centrale, 1', 'Super Amministratore'),
+('pluto', 'password123', 'Admin', 'Uno', 'Via Milano, 2', 'Amministratore'),
+('paperino', 'password123', 'Operatore', 'Cinque', 'Via Bari, 9', 'Operatore');
+
+INSERT INTO CasaEditrice (Nome, Indirizzo) VALUES 
+('Casa Editrice A', 'Via Editrice, 1'),
+('Casa Editrice B', 'Via Editrice, 2'),
+('Casa Editrice C', 'Via Editrice, 3');
+
+INSERT INTO Libro (ISBN, Titolo, Autore, CodiceCasaEditrice) VALUES 
+('001', 'Libro 1', 'Autore 1', 1),
+('002', 'Libro 2', 'Autore 2', 2),
+('003', 'Libro 3', 'Autore 3', 3);
+
+
+INSERT INTO Prenotazione (codiceISBN, Username, data_prenotazione) VALUES 
+('001', 'pippo', '2024-01-10'),
+('002', 'pluto', '2024-01-11');
