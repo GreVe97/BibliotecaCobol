@@ -1,0 +1,16 @@
+services:
+  oscobol:
+    image: opensourcecobol/opensource-cobol
+    tty: true
+    environment:
+      COBCPY: /oscobol/cpy
+    volumes:
+      - ./cpy:/oscobol/cpy
+      - ./src:/oscobol/src
+
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"

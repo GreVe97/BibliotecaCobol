@@ -1,0 +1,23 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. MAIN.
+       AUTHOR. .
+       INSTALLATION.  where.
+       DATE-WRITTEN.  20/06/2024.
+       DATE-COMPILED. 20/06/2024.
+       SECURITY.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SOURCE-COMPUTER. pc.
+       OBJECT-COMPUTER. pc.
+       SPECIAL-NAMES.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+       DATA DIVISION.
+        FILE SECTION.
+        WORKING-STORAGE SECTION.
+        LINKAGE SECTION.
+       PROCEDURE DIVISION.
+       DISPLAY "HELLO WORLD".
+        
+             
+             STOP RUN.       
