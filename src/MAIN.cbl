@@ -18,7 +18,7 @@
         01 CREDENZIALI.
            05 PASSWORD-INPUT PIC X(50).
            05 USER-INPUT PIC X(50).
-        01 UTENTE.
+        01 WS-UTENTE.
            05 USER PIC X(50).
            05 ROLE PIC X(30).
         01 SCELTA-MENU PIC 9(1).
@@ -27,11 +27,12 @@
       *****************INIZIO DEI COMANDI SQL**************************
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
        01 DBNAME                PIC X(30) VALUE SPACE.
-       01 USERNAME              PIC X(30) VALUE SPACE.
+       01 USERNAME-DB              PIC X(30) VALUE SPACE.
        01 PASSWORD              PIC X(30) VALUE SPACE.
-       01 UTENTE-DB.
-            03 USER-DB  PIC 9(4) VALUE ZERO.
-            03 PASSWORD-DB  PIC X(20).
+       01 UTENTE.
+            03 USERNAME  PIC X(20).
+            03 PASSW PIC X(20).
+            03 RUOLO PIC X(20).
        EXEC SQL END DECLARE SECTION END-EXEC.
       ********************INCLUDO SQLCA********************************
        EXEC SQL INCLUDE SQLCA END-EXEC.
@@ -40,33 +41,35 @@
        INIZIO.
       ********************CONNESSIONE AL DB*****************************    
            DISPLAY "Mi connetto al database.".
-           MOVE "biblioteca"             TO DBNAME
-           MOVE "postgres"               TO USERNAME
+           MOVE "biblioteca@db"          TO DBNAME
+           MOVE "postgres"               TO USERNAME-DB
            MOVE SPACE                    TO PASSWORD
            EXEC SQL
-               CONNECT :USERNAME IDENTIFIED BY :PASSWORD USING :DBNAME
+               CONNECT :USERNAME-DB IDENTIFIED BY :PASSWORD 
+               USING :DBNAME
            END-EXEC.
            IF SQLCODE NOT = ZERO PERFORM ERROR-RUNTIME STOP RUN.       
            DISPLAY "Conessione al database riuscita!".
           
-
+     
        LOGIN.
            DISPLAY "INSERISCI USERNAME: ".
-           ACCEPT USER.  
+           ACCEPT USER-INPUT.  
            DISPLAY "INSERISCI PASSWORD: "     
-           ACCEPT PASSWORD.
+           ACCEPT PASSWORD-INPUT.
            EXEC SQL 
-               SELECT RUOLO INTO :ROLE FROM USER
-                WHERE USER = :USER-INPUT AND PASSWORD = :PASSWORD-INPUT       
+               SELECT RUOLO INTO :ROLE FROM Utente
+                WHERE USERNAME = TRIM(BOTH ' ' FROM :USER-INPUT) AND
+                   PASSW = TRIM(BOTH ' ' FROM :PASSWORD-INPUT)
            END-EXEC. 
            IF SQLCODE NOT = ZERO PERFORM ERROR-RUNTIME. 
            DISPLAY "ROLE: "ROLE.
            EVALUATE ROLE
-               WHEN "AMMINISTRATORE"
-                   DISPLAY "SEI AMMINISTRATORE"
-               WHEN "OPERATORE"
-                   DISPLAY "SEI OPERATORE"
-               WHEN "SUPER AMMINISTRATORE"
+               WHEN "Amministratore"
+                   DISPLAY "Sei amministratore"
+               WHEN "Operatore"
+                   DISPLAY "Sei Operatore"
+               WHEN "Super Amministratore"
                    DISPLAY "SEI SUPER AMMINISTRATORE"
                WHEN OTHER
                    DISPLAY "LOGIN NON RIUSCITO, RIPROVA"
@@ -159,7 +162,7 @@
                    PERFORM OPERATORE-MENU 
             END-EVALUATE.
 
-
+       
 
 
 
