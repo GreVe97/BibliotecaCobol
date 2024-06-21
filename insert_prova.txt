@@ -1,9 +1,11 @@
 -- Rimozione delle tabelle esistenti, se presenti
 DROP TABLE IF EXISTS Prenotazione;
+DROP TABLE IF EXISTS Accessi;
 DROP TABLE IF EXISTS Libro;
 DROP TABLE IF EXISTS CasaEditrice;
 DROP TABLE IF EXISTS Utente;
 DROP TABLE IF EXISTS Ruolo;
+
 
 -- Creazione delle tabelle
 
@@ -44,10 +46,17 @@ CREATE TABLE Libro (
 CREATE TABLE Prenotazione (
     codiceISBN VARCHAR(13),
     Username VARCHAR(50),
-    data_prenotazione DATE,
+    data_prenotazione VARCHAR(50),
     PRIMARY KEY (codiceISBN, Username),
     FOREIGN KEY (codiceISBN) REFERENCES Libro(ISBN),
     FOREIGN KEY (Username) REFERENCES Utente(Username)
+);
+
+-- Tabella Accessi 
+CREATE TABLE Accessi ( 
+	Username VARCHAR(50) PRIMARY KEY, 
+	NumeroAccessi INT NOT NULL, 
+	FOREIGN KEY (Username) REFERENCES Utente(Username) 
 );
 
 INSERT INTO Ruolo (Ruolo, Descrizione) VALUES 
@@ -67,11 +76,15 @@ INSERT INTO CasaEditrice (Nome, Indirizzo) VALUES
 ('Casa Editrice C', 'Via Editrice, 3');
 
 INSERT INTO Libro (ISBN, Titolo, Autore, CodiceCasaEditrice) VALUES 
-('001', 'Libro 1', 'Autore 1', 1),
-('002', 'Libro 2', 'Autore 2', 2),
-('003', 'Libro 3', 'Autore 3', 3);
+('001', 'Il Nome della Rosa', 'Umberto Eco', 1),
+('002', 'I Pilastri della Terra', 'Ken Follet', 2),
+('003', 'Viaggio al Centro della Terra', 'Jules Verne', 3);
 
 
 INSERT INTO Prenotazione (codiceISBN, Username, data_prenotazione) VALUES 
 ('001', 'pippo', '2024-01-10'),
 ('002', 'pluto', '2024-01-11');
+INSERT INTO Accessi ( Username, NumeroAccessi) VALUES 
+('pippo', 4),
+('paperino', 7),
+('pluto', 5);

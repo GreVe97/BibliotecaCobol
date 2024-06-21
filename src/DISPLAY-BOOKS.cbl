@@ -14,7 +14,8 @@
              03 FILLER PIC X(1).
              03  DB-AUTORE              PIC X(50) VALUE SPACE.
              03 FILLER PIC X.
-             03  DB-CodiceCasaEditrice  PIC X(50) VALUE SPACE.       
+             03  DB-CodiceCasaEditrice  PIC X(50) VALUE SPACE.  
+             03 DB-NOME-CASA-EDITRICE      PIC X(50) VALUE SPACE. 
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
        LINKAGE SECTION.
@@ -28,8 +29,10 @@
 
        EXEC SQL
            DECLARE C1 CURSOR FOR
-           SELECT ISBN, TITOLO, AUTORE, CodiceCasaEditrice 
-            FROM Libro
+           SELECT l.ISBN, l.TITOLO, l.AUTORE, l.CodiceCasaEditrice, 
+               c.Nome 
+            FROM Libro l 
+            JOIN CasaEditrice c on l.CodiceCasaEditrice = c.Codice
        END-EXEC.
 
        EXEC SQL
@@ -38,7 +41,7 @@
 
        EXEC SQL
            FETCH C1 INTO :DB-ISBN, :DB-TITOLO, :DB-AUTORE, 
-           :DB-CodiceCasaEditrice
+           :DB-CodiceCasaEditrice, :DB-NOME-CASA-EDITRICE
        END-EXEC.
        DISPLAY "-------Libri totali: "LIBRI-TOTALI" -----------"
        PERFORM UNTIL SQLCODE NOT = ZERO
@@ -47,11 +50,12 @@
            DISPLAY "TITOLO: " DB-TITOLO
            DISPLAY "AUTORE: " DB-AUTORE
            DISPLAY "CodiceCasaEditrice: " DB-CodiceCasaEditrice 
+           DISPLAY "Nome Casa Editrice: "DB-NOME-CASA-EDITRICE
            DISPLAY " - "
            ADD 1 TO CONTATORE
            EXEC SQL
                FETCH C1 INTO :DB-ISBN, :DB-TITOLO, :DB-AUTORE, 
-               :DB-CodiceCasaEditrice
+               :DB-CodiceCasaEditrice, :DB-NOME-CASA-EDITRICE
            END-EXEC
        END-PERFORM.
 
