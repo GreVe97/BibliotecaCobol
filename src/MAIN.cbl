@@ -270,13 +270,13 @@
             EXEC SQL
                UPDATE Accessi
                SET NumeroAccessi = :NUMERO-ACCESSI
-               WHERE Username = :USER-INPUT
+               WHERE Username = TRIM(BOTH ' ' FROM :USER-INPUT)
            END-EXEC.
            
            IF SQLCODE = 100 THEN
                EXEC SQL
                    INSERT INTO Accessi (Username, NumeroAccessi)
-                   VALUES (:USER-INPUT, 1)
+                   VALUES (TRIM(BOTH ' ' FROM :USER-INPUT), 1)
                END-EXEC
            END-IF.
            IF SQLCODE NOT = 0 PERFORM ERROR-RUNTIME.
