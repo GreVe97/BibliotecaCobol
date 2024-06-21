@@ -1,0 +1,14 @@
+# Precompilare il programma principale
+ocesql src/MAIN.cbl MAIN.pre
+
+# Precompilare la subroutine
+ocesql src/DISPLAY-BOOKS.cbl DISPLAY-BOOKS.pre
+
+# Compilare il programma principale
+cobc -locesql -x main MAIN.pre
+
+# Compilare la subroutine
+cobc -locesql -m DISPLAY-BOOKS.pre
+
+# Eseguire il programma principale
+cobcrun main
