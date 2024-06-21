@@ -8,7 +8,7 @@
            01 LIBRI-TOTALI PIC 9(3).
            01 CONTATORE PIC 9(3) VALUE 1.
            01 DB-LIBRO.
-             03  DB-ISBN                PIC 9(4) VALUE ZERO.
+             03  DB-ISBN                PIC X(50) VALUE SPACE.
              03 FILLER PIC X.
              03  DB-TITOLO              PIC X(50) VALUE SPACE.
              03 FILLER PIC X(1).

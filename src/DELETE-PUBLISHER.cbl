@@ -17,13 +17,11 @@
            DISPLAY "Queste sono tutte le case editrici: "
            CALL "DISPLAY-PUBLISHERS"
            DISPLAY "Inserire il codice del Publisher da eliminare:"
-           ACCEPT CODICE.
-           
+           ACCEPT CODICE.       
            EXEC SQL
                SELECT COUNT(*) INTO :LIBRI FROM Libro
                WHERE CodiceCasaEditrice =:CODICE
            END-EXEC.
-
            IF LIBRI = 0
               EXEC SQL
                    DELETE FROM CasaEditrice WHERE Codice = :CODICE
@@ -40,6 +38,4 @@
            ELSE           
                DISPLAY "ERRORE: Il publisher ha "LIBRI" libri associati"
            END-IF.
-
-
        EXIT PROGRAM.

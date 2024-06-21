@@ -7,7 +7,7 @@
            05  SQLCODE               PIC S9(9) COMP-5.
            05  SQLERRM.
            49  SQLERRML              PIC S9(4) COMP-5.
-           49  SQLERRMC              PIC X(70).
+           49  SQLERRMC              PIC X(200).
            05  SQLERRP               PIC X(8).                          *> not used
            05  SQLERRD OCCURS 6 TIMES                                   *> used only ERRD(3)
                                      PIC S9(9) COMP-5.
