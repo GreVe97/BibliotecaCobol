@@ -23,6 +23,7 @@
         01 CREDENZIALI.
            05 PASSWORD-INPUT PIC X(50).
            05 USER-INPUT PIC X(50).
+        01 NUMERO-ACCESSI PIC 9(5).
         01 WS-UTENTE.
            05 USER PIC X(50).
            05 ROLE PIC X(30).
@@ -67,7 +68,11 @@
                 WHERE USERNAME = TRIM(BOTH ' ' FROM :USER-INPUT) AND
                    PASSW = TRIM(BOTH ' ' FROM :PASSWORD-INPUT)
            END-EXEC. 
-           IF SQLCODE NOT = ZERO PERFORM ERROR-RUNTIME. 
+           IF SQLCODE NOT = ZERO 
+               PERFORM ERROR-RUNTIME
+               ELSE
+                   PERFORM AGGIORNA-LOGIN
+            END-IF.
            DISPLAY "ROLE: "ROLE.
            EVALUATE ROLE
                WHEN "Amministratore"
@@ -120,7 +125,7 @@
                WHEN 2 PERFORM GESTIONE-LIBRI-MENU
                WHEN 3 PERFORM GESTIONE-PUBLISHER-MENU 
                WHEN 4 CALL 'DISPLAY-RESERVATIONS' 
-               WHEN 5 CALL 'NUMERO-ACCESSI'
+               WHEN 5 CALL 'DISPLAY-LOGINS'
                WHEN 0 STOP RUN 
                WHEN OTHER 
                    DISPLAY "Invalid option." 
@@ -244,7 +249,40 @@
                DISPLAY "ERRORE: Il libro è gia' prenotato"
            END-IF.
            PERFORM INDIETRO.
-      
+
+
+
+
+       AGGIORNA-LOGIN.
+            EXEC SQL
+               DECLARE C1 CURSOR FOR
+               SELECT  NumeroAccessi FROM Accessi
+           END-EXEC.
+           EXEC SQL
+               OPEN C1
+           END-EXEC.
+               EXEC SQL
+                   FETCH C1 INTO :NUMERO-ACCESSI
+               END-EXEC
+               
+           ADD 1 TO NUMERO-ACCESSI.
+
+            EXEC SQL
+               UPDATE Accessi
+               SET NumeroAccessi = :NUMERO-ACCESSI
+               WHERE Username = TRIM(BOTH ' ' FROM :USER-INPUT)
+           END-EXEC.
+           
+           IF SQLCODE = 100 THEN
+               EXEC SQL
+                   INSERT INTO Accessi (Username, NumeroAccessi)
+                   VALUES (TRIM(BOTH ' ' FROM :USER-INPUT), 1)
+               END-EXEC
+           END-IF.
+           IF SQLCODE NOT = 0 PERFORM ERROR-RUNTIME.
+           DISPLAY "Accessi aggiornati per l'utente: " USER-INPUT.
+           
+    
 
       ********************VISUALIZZAZIONI ERRORI************************ 
        ERROR-RUNTIME.
