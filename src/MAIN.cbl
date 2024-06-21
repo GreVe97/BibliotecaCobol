@@ -116,7 +116,7 @@
                WHEN 2 PERFORM GESTIONE-LIBRI-MENU
                WHEN 3 PERFORM GESTIONE-PUBLISHER-MENU 
                WHEN 4 CALL 'DISPLAY-RESERVATIONS' 
-               WHEN 5 CALL 'DISPLAY-USER-LOGINS'
+               WHEN 5 CALL 'NUMERO-ACCESSI'
                WHEN 0 STOP RUN 
                WHEN OTHER 
                    DISPLAY "Invalid option." 
