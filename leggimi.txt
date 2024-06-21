@@ -1,0 +1,90 @@
+*> commenti
+
+// PER FAR PARTIRE LE MACCHINE
+    docker-compose up -d
+
+//PER CREARE IL DATABASE
+
+docker compose exec -it  db /bin/bash
+createdb -U postgres testdb
+
+//PER ACCEDERE ALLA MACCHINA COBOL
+    docker compose exec oscobol /bin/bash
+//DA DENTRO LA CARTELLA oscobol
+
+
+//COMPILARE
+    ocesql src/CIAO.cbl CIAO.pre
+    cobc -locesql CIAO.pre
+    cobcrun CIAO
+
+docker pull nginx - 			scarica l'immagine di nginx
+docker image ls - 			vediamo le image scaricate
+docker run nginx -			 runniamo l'image  e si mette in ascolto
+docker container ls - 			vediamo l'immagine che sta in esecuzion		
+docker ps -a 
+docker remove = docjer rm 
+
+docker rm nome
+
+docker oggetto azione
+
+docker image start
+
+docker cointainer start nome
+
+docker run -d nginx
+
+docker stop nome
+
+docker ps -a - 				controlliamo i container
+
+docker run -d -p 8888:80 nginx		creo una porta
+
+0.0.0.0 tutti gli indirizzi IP
+
+
+docker run -d -p 8888:80 --name miocontainer nginx 	assegniamo nome e porta
+
+docker exec nome Macchina ls
+
+ping 8.8.8.8
+
+docker exec numero macchina /bin/bach
+
+docker exec numero macchina /bin/sh
+
+container: un'applicazione che gira. vivono in un atro contesto, in un contesto prorpio.
+
+volume: archivio che utlizza come macchina
+
+docker volume create nome	creiamo volume(harddisk)
+
+creiamo una macchina con l'opzione 
+
+per creare 
+
+yaml: tipo di sintassi, chiave valore, posizionale dove si fanno le configurazioni: i servizi.
+
+	docker compose down 
+// PER FAR PARTIRE LE MACCHINE
+    docker-compose up -d
+//PER ACCEDERE ALLA MACCHINA COBOL
+    docker compose exec oscobol /bin/bash
+//DA DENTRO LA CARTELLA oscobol
+//COMPILARE
+    ocesql src/CIAO.cbl CIAO.pre
+    cobc -locesql CIAO.pre
+    cobcrun CIAO
+
+
+//PER CREARE IL DATABASE
+
+docker compose exec -it  db /bin/bash
+createdb -U postgres testdb
+
+
+
+
+
+

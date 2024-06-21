@@ -7,7 +7,7 @@ services:
     volumes:
       - ./cpy:/oscobol/cpy
       - ./src:/oscobol/src
-
+  
   db:
     image: postgres
     ports:
