@@ -71,6 +71,7 @@
                    DISPLAY "Sei Operatore"
                WHEN "Super Amministratore"
                    DISPLAY "SEI SUPER AMMINISTRATORE"
+                   PERFORM SUPEADMIN-MENU
                WHEN OTHER
                    DISPLAY "LOGIN NON RIUSCITO, RIPROVA"
                    PERFORM LOGIN
@@ -130,7 +131,9 @@
                WHEN 3 CALL 'DISPLAY-USERS'
                WHEN 4 CALL 'INSERT-BOOK'
                WHEN 5 CALL 'DELETE-BOOK'
-               WHEN 6 CALL 'DISPLAY-BOOKS'
+               WHEN 6 
+                   CALL 'DISPLAY-BOOKS'
+                   PERFORM SUPEADMIN-MENU
                WHEN 7 CALL 'INSERT-PUBLISHER' 
                WHEN 8 CALL 'DELETE-PUBLISHER' 
                WHEN 9 CALL 'DISPLAY-PUBLISHERS' 
@@ -162,7 +165,7 @@
                    PERFORM OPERATORE-MENU 
             END-EVALUATE.
 
-       
+       GESTIONE-UTENTE.
 
 
 
