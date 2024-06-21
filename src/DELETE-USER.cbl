@@ -5,28 +5,31 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
 
-       EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-           01 USERNAME PIC X(50).
-       EXEC SQL END DECLARE SECTION END-EXEC.
-
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
+       01 DEL-USERNAME PIC X(20).
+
        PROCEDURE DIVISION.
+       DELETE-USER-PARA.
+           DISPLAY 'Inserisci username da eliminare: ' 
+           ACCEPT DEL-USERNAME
+           IF DEL-USERNAME = "Super Amministratore" THEN
+               DISPLAY 'NON PUOI ELIMINARE SUPER Admin.'
+           ELSE
+               EXEC SQL
+                   DELETE FROM UTENTE
+                   WHERE USERNAME = (TRIM(BOTH ' ' FROM :DEL-USERNAME))
+               END-EXEC
 
-           DISPLAY "Inserisci l'username da cancellare: ".
-           ACCEPT USERNAME.
-
-           IF USERNAME = 'Super Amministratore'
-           THEN
-               DISPLAY "Non è possibile cancellare il Super Amministratore."
-               STOP RUN.
+           IF SQLCODE = 0 THEN
+               DISPLAY 'Utente Eliminato con successo.' 
+           ELSE
+               DISPLAY 'ERRORE: ' SQLERRMC
+               END-IF
            END-IF.
 
            EXEC SQL
-               DELETE FROM Utente
-               Where Username :USERNAME
+                   COMMIT
            END-EXEC.
 
-           DISPLAY "Programma finito."     
-           STOP RUN.
-
+           EXIT PROGRAM.

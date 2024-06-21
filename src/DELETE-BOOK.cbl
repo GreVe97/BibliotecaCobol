@@ -1,51 +1,42 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. DELETE-BOOK.
-
+       AUTHOR. MARCO.
+       DATE-WRITTEN. 20/06/2024.
        DATA DIVISION.
        WORKING-STORAGE SECTION.
 
-       EXEC SQL BEGIN DECLARE SECTION.
-       
-           01 ISBN        PIC X(13).
-           01 ROW-COUNT   PIC 9(9) USAGE BINARY.
-       EXEC SQL END DECLARE SECTION.
-
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
+       01 DEL-ISBN PIC X(20).
+       01 BOOK-COUNT PIC 9(5).
+
        PROCEDURE DIVISION.
-           DISPLAY "Inserisci ISBN del libro da cancellare: ".
-           ACCEPT ISBN.
-
+       DELETE-BOOK-PARA.
+           CALL 'DISPLAY-BOOKS'
+           DISPLAY 'Inserire ISBN del libro da eliminare: ' 
+           ACCEPT DEL-ISBN
            EXEC SQL
-               SELECT COUNT(*) INTO :ROW-COUNT
-               FROM Prenotazione
-               WHERE codiceISBN = :ISBN
-           END-EXEC.
+              SELECT COUNT(*)
+              INTO :BOOK-COUNT
+              FROM PRENOTAZIONE
+              WHERE CODICEISBN = (TRIM(BOTH ' ' FROM :DEL-ISBN))
+           END-EXEC
 
+           IF BOOK-COUNT = 0 THEN
+               EXEC SQL
+                  DELETE FROM LIBRO
+                  WHERE ISBN = (TRIM(BOTH ' ' FROM :DEL-ISBN))
+               END-EXEC
+           
            IF SQLCODE = 0 THEN
-               IF ROW-COUNT = 0 THEN
-                   EXEC SQL
-                       DELETE FROM Libro WHERE ISBN = :ISBN
-                   END-EXEC.
-
-                   IF SQLCODE = 0 THEN
-                       DISPLAY "Libro cancellato con successo."
-                   ELSE
-                       DISPLAY "Errore nella cancellazione del libro."
-                       DISPLAY "Codice errore SQL: " SQLCODE
-                       DISPLAY "Messaggio di errore: " SQLERRM
-                   END-IF
-               ELSE
-                   DISPLAY "Il libro è prenotato e non può essere cancellato."
-               END-IF
+               DISPLAY 'libro Eliminato con successo.' 
            ELSE
-               DISPLAY "Errore nel controllo delle prenotazioni."
-               DISPLAY "Codice errore SQL: " SQLCODE
-               DISPLAY "Messaggio di errore: " SQLERRM
+               DISPLAY 'ERRORE: ' SQLERRMC
+               END-IF
            END-IF.
 
            EXEC SQL
-               COMMIT WORK
+                   COMMIT
            END-EXEC.
 
-           STOP RUN.
+           EXIT PROGRAM.

@@ -85,6 +85,6 @@ createdb -U postgres testdb
 
 
 
-
-
+ ocesql src/DELETE-USER.cbl DELETE-USER.pre
+cobc -locesql DELETE-USER.pre
 
