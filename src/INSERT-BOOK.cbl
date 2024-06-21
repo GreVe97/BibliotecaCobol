@@ -1,16 +1,16 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. INSERT-BOOK.
-
+       AUTHOR. MARCO.
+       DATE-WRITTEN. 20/06/2024.
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       EXEC SQL BEGIN DECLARE SECTION END-EXEC.
+
+       EXEC SQL INCLUDE SQLCA END-EXEC.
+
            01 ISBN        PIC X(13).
            01 TITOLO      PIC X(255).
            01 AUTORE      PIC X(255).
            01 CODICE-EDITRICE PIC 9(9).
-       EXEC SQL END DECLARE SECTION END-EXEC.
-
-       EXEC SQL INCLUDE SQLCA END-EXEC.
 
        PROCEDURE DIVISION.
            DISPLAY "Inserisci ISBN del libro: ".
@@ -23,20 +23,22 @@
            ACCEPT CODICE-EDITRICE.
 
            EXEC SQL
-               INSERT INTO Libro (ISBN, Titolo, Autore, CodiceCasaEditrice)
-               VALUES (:ISBN, :TITOLO, :AUTORE, :CODICE-EDITRICE)
+               INSERT INTO  LIBRO(ISBN, TITOLO, AUTORE, 
+                                                   CODICECASAEDITRICE)
+               VALUES (TRIM(BOTH ' ' FROM :ISBN), 
+                       TRIM(BOTH ' ' FROM :TITOLO), 
+                       TRIM(BOTH ' ' FROM :AUTORE), 
+                       :CODICE-EDITRICE)
            END-EXEC.
-
+           
            IF SQLCODE = 0 THEN
-               DISPLAY "Libro inserito con successo."
+               DISPLAY 'Libro inserito con successo.'
            ELSE
-               DISPLAY "Errore nell'inserimento del libro."
-               DISPLAY "Codice errore SQL: " SQLCODE
-               DISPLAY "Messaggio di errore: " SQLERRM
-           END-IF.
+               DISPLAY 'Errore: ' SQLERRMC
+           END-IF
 
            EXEC SQL
-               COMMIT WORK
+                   COMMIT
            END-EXEC.
 
-           STOP RUN.
+           EXIT PROGRAM.
