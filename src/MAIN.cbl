@@ -15,6 +15,10 @@
        DATA DIVISION.
         FILE SECTION.
         WORKING-STORAGE SECTION.
+        01 PRENOTAZIONI PIC 9(5).
+        01 NUOVA-PRENOTAZIONE.
+           03 ISBN PIC X(50).
+           03 DATA-PRENOTAZIONE PIC X(50).
         01 PARAGRAFO-PRECEDENTE PIC X(1).
         01 CREDENZIALI.
            05 PASSWORD-INPUT PIC X(50).
@@ -116,13 +120,14 @@
                WHEN 2 PERFORM GESTIONE-LIBRI-MENU
                WHEN 3 PERFORM GESTIONE-PUBLISHER-MENU 
                WHEN 4 CALL 'DISPLAY-RESERVATIONS' 
-               WHEN 5 CALL 'DISPLAY-USER-LOGINS'
+               WHEN 5 CALL 'NUMERO-ACCESSI'
                WHEN 0 STOP RUN 
                WHEN OTHER 
                    DISPLAY "Invalid option." 
                    PERFORM SUPEADMIN-MENU
            END-EVALUATE.
        OPERATORE-MENU.
+            MOVE "O" TO PARAGRAFO-PRECEDENTE
             DISPLAY "------OPERATORE MENU ------"
             DISPLAY "1. Visualizza libri" 
             DISPLAY "2. Visualizza case editrici" 
@@ -134,7 +139,7 @@
                WHEN 1 CALL 'DISPLAY-BOOKS' 
                WHEN 2 CALL 'DISPLAY-PUBLISHERS' 
                WHEN 3 CALL 'SEARCH-BOOKS' 
-               WHEN 4 CALL 'RESERVE-BOOK'USING BY CONTENT USER-INPUT
+               WHEN 4 PERFORM RESERVE-BOOK
                 WHEN OTHER 
                    DISPLAY "Invalid option." 
                    PERFORM OPERATORE-MENU 
@@ -197,7 +202,49 @@
            EVALUATE PARAGRAFO-PRECEDENTE
                WHEN "S" PERFORM SUPEADMIN-MENU
                WHEN "A" PERFORM ADMIN-MENU
+               WHEN "0" PERFORM OPERATORE-MENU
            END-EVALUATE.
+
+
+      ******************PRENOTAZIONE LIBRO *****************************
+       RESERVE-BOOK.
+           DISPLAY "------- SONO RESERVE-BOOK!".
+           DISPLAY "Questa è la lista dei libri disponibili: "
+           CALL "LIBRI-DISPONIBILI".
+           DISPLAY " "
+           DISPLAY "Inserisci il codice di un libro che vuoi prenotare"
+           ACCEPT ISBN.
+           EXEC SQL
+                SELECT COUNT(*) INTO :PRENOTAZIONI FROM Prenotazione
+                   WHERE codiceISBN = TRIM(" " BOTH FROM :ISBN)
+           END-EXEC.
+
+           IF PRENOTAZIONI = 0
+               DISPLAY "Inserisci la data della prenotazione"
+               ACCEPT DATA-PRENOTAZIONE
+               EXEC SQL
+                   INSERT INTO Prenotazione (codiceISBN, Username, 
+                      data_prenotazione)
+                   VALUES (TRIM(BOTH ' ' FROM :ISBN), 
+                       TRIM(BOTH ' ' FROM :USER-INPUT), 
+                       TRIM(BOTH ' ' FROM :DATA-PRENOTAZIONE))
+               END-EXEC
+              
+               IF SQLCODE = 0
+                   DISPLAY 'Prenotazione effettuata con successo.'
+                   EXEC SQL
+                       COMMIT
+                   END-EXEC
+               ELSE
+                   DISPLAY 'Si è verificato un errore'
+                   DISPLAY SQLERRMC
+                   PERFORM RESERVE-BOOK
+               END-IF
+           ELSE           
+               DISPLAY "ERRORE: Il libro è gia' prenotato"
+           END-IF.
+           PERFORM INDIETRO.
+      
 
       ********************VISUALIZZAZIONI ERRORI************************ 
        ERROR-RUNTIME.
